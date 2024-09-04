@@ -31,18 +31,27 @@ class ChatView extends StatelessWidget {
               LoginView.routeName,
             );
           },
-          icon: Icon(Icons.logout),
+          icon: const Icon(Icons.logout),
         ),
       ),
       body: Column(
         children: [
-          Expanded(
-            child: ListView.builder(
-              itemCount: 9,
-              itemBuilder: (context, index) {
-                return ChatBubbleForFriend();
-              },
-            ),
+          FutureBuilder<QuerySnapshot>(
+            future: messages.get(),
+            builder: (context, snapshot) {
+              if (snapshot.hasData) {
+                return Expanded(
+                  child: ListView.builder(
+                    itemCount: 9,
+                    itemBuilder: (context, index) {
+                      return const ChatBubbleForFriend();
+                    },
+                  ),
+                );
+              } else {
+                return const Center(child: CircularProgressIndicator());
+              }
+            },
           ),
           Padding(
             padding: const EdgeInsets.all(16.0),
