@@ -1,3 +1,4 @@
+import 'package:chat_app/views/chat_view.dart';
 import 'package:chat_app/views/login_view.dart';
 import 'package:chat_app/views/register_view.dart';
 import 'package:firebase_core/firebase_core.dart';
@@ -7,7 +8,7 @@ void main() async {
   WidgetsFlutterBinding.ensureInitialized();
   //await Firebase.initializeApp();
   await Firebase.initializeApp(
-    options: FirebaseOptions(
+    options: const FirebaseOptions(
       apiKey: 'AIzaSyDEBmCdzRcEbOiLHw3IFbYkAlIVPHpETTc',
       appId: '1:43223506121:android:c1863f8ac0e9ae2e164118',
       messagingSenderId: '43223506121',
@@ -33,8 +34,10 @@ class MyApp extends StatelessWidget {
       ),
       initialRoute: LoginView.routeName,
       routes: {
-        LoginView.routeName: (context)=>LoginView(),
-        RegisterView.routeName : (context)=>RegisterView(),
+        LoginView.routeName: (context)=>const LoginView(),
+        RegisterView.routeName : (context)=>const RegisterView(),
+        ChatView.routeName : (context)=>const ChatView(),
+
       },
     );
   }

@@ -1,6 +1,8 @@
 import 'package:chat_app/constants.dart';
+import 'package:chat_app/views/chat_view.dart';
 import 'package:chat_app/views/widgets/custom_button.dart';
 import 'package:chat_app/views/widgets/custom_form_text_field.dart';
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 
 class RegisterView extends StatefulWidget {
@@ -15,7 +17,10 @@ class _RegisterViewState extends State<RegisterView> {
   String? email;
 
   String? password;
+  final emailTextController = TextEditingController();
+  final passwordTextController = TextEditingController();
 
+  bool isProcessing = false;
   GlobalKey<FormState> formKey = GlobalKey();
 
   @override
@@ -39,7 +44,6 @@ class _RegisterViewState extends State<RegisterView> {
                     style: TextStyle(
                       fontSize: 32,
                       color: Colors.white,
-                      fontFamily: 'pacifico',
                     ),
                   ),
                 ],
@@ -62,6 +66,18 @@ class _RegisterViewState extends State<RegisterView> {
                 height: 20,
               ),
               CustomFormTextField(
+                controller: emailTextController,
+                validator: (value) {
+                  if (value == null || value.trim().isEmpty) {
+                    return 'Please enter your email address';
+                  }
+                  var regex = RegExp(
+                      r"(^[a-zA-Z0-9_.+-]+@[a-zA-Z0-9]+\.[a-zA-Z0-9-.]+$)");
+                  if (!regex.hasMatch(value)) {
+                    return 'enter a valid email address';
+                  }
+                  return null;
+                },
                 onChanged: (data) {
                   email = data;
                 },
@@ -71,6 +87,18 @@ class _RegisterViewState extends State<RegisterView> {
                 height: 10,
               ),
               CustomFormTextField(
+                controller: passwordTextController,
+                validator: (value) {
+                  if (value == null || value.trim().isEmpty) {
+                    return 'Please enter your password';
+                  }
+                  var regex = RegExp(
+                      r"(?=^.{8,}$)(?=.*[!@#$%^&*]+)(?![.\\n])(?=.*[A-Z])(?=.*[a-z]).*$");
+                  if (!regex.hasMatch(value)) {
+                    return 'enter a valid password';
+                  }
+                  return null;
+                },
                 obscureText: true,
                 onChanged: (data) {
                   password = data;
@@ -80,10 +108,40 @@ class _RegisterViewState extends State<RegisterView> {
               const SizedBox(
                 height: 20,
               ),
-              CustomButton(
-                onTap: () async {},
-                text: 'REGISTER',
-              ),
+              isProcessing
+                  ? const Center(child: CircularProgressIndicator())
+                  : CustomButton(
+                      onTap: () async {
+                        setState(() {
+                          isProcessing = true;
+                        });
+                        if (formKey.currentState!.validate()) {
+                          setState(() {
+                            isProcessing = true;
+                          });
+                          UserCredential user = await FirebaseAuth.instance
+                              .createUserWithEmailAndPassword(
+                            email: emailTextController.text,
+                            password: passwordTextController.text,
+                          );
+                          setState(() {
+                            isProcessing = false;
+                          });
+                          if (user.user != null) {
+                            Navigator.pushReplacementNamed(
+                              context,
+                              ChatView.routeName,
+                              arguments: user.user,
+                            );
+                          } else {
+                            setState(() {
+                              isProcessing = false;
+                            });
+                          }
+                        }
+                      },
+                      text: 'REGISTER',
+                    ),
               const SizedBox(
                 height: 10,
               ),
