@@ -129,27 +129,7 @@ class _LoginViewState extends State<LoginView> {
                         ? const Center(child: CircularProgressIndicator())
                         : CustomButton(
                             onTap: () async {
-                              if (formKey.currentState!.validate()) {
-                                setState(() {
-                                  isProcessing = true;
-                                });
-                                UserCredential user = await FirebaseAuth
-                                    .instance
-                                    .signInWithEmailAndPassword(
-                                  email: emailTextController.text,
-                                  password: passwordTextController.text,
-                                );
-                                setState(() {
-                                  isProcessing = false;
-                                });
-                                if (user.user != null) {
-                                  Navigator.pushReplacementNamed(
-                                    context,
-                                    ChatView.routeName,
-                                    arguments: user.user,
-                                  );
-                                }
-                              }
+                              await login(context);
                             },
                             text: 'LOGIN',
                           ),
@@ -192,5 +172,29 @@ class _LoginViewState extends State<LoginView> {
         },
       ),
     );
+  }
+
+  Future<void> login(BuildContext context) async {
+    if (formKey.currentState!.validate()) {
+      setState(() {
+        isProcessing = true;
+      });
+      UserCredential user = await FirebaseAuth
+          .instance
+          .signInWithEmailAndPassword(
+        email: emailTextController.text,
+        password: passwordTextController.text,
+      );
+      setState(() {
+        isProcessing = false;
+      });
+      if (user.user != null) {
+        Navigator.pushReplacementNamed(
+          context,
+          ChatView.routeName,
+          arguments: user.user,
+        );
+      }
+    }
   }
 }

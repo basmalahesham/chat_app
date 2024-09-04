@@ -112,33 +112,7 @@ class _RegisterViewState extends State<RegisterView> {
                   ? const Center(child: CircularProgressIndicator())
                   : CustomButton(
                       onTap: () async {
-                        setState(() {
-                          isProcessing = true;
-                        });
-                        if (formKey.currentState!.validate()) {
-                          setState(() {
-                            isProcessing = true;
-                          });
-                          UserCredential user = await FirebaseAuth.instance
-                              .createUserWithEmailAndPassword(
-                            email: emailTextController.text,
-                            password: passwordTextController.text,
-                          );
-                          setState(() {
-                            isProcessing = false;
-                          });
-                          if (user.user != null) {
-                            Navigator.pushReplacementNamed(
-                              context,
-                              ChatView.routeName,
-                              arguments: user.user,
-                            );
-                          } else {
-                            setState(() {
-                              isProcessing = false;
-                            });
-                          }
-                        }
+                        await register(context);
                       },
                       text: 'REGISTER',
                     ),
@@ -174,5 +148,35 @@ class _RegisterViewState extends State<RegisterView> {
         ),
       ),
     );
+  }
+
+  Future<void> register(BuildContext context) async {
+    setState(() {
+      isProcessing = true;
+    });
+    if (formKey.currentState!.validate()) {
+      setState(() {
+        isProcessing = true;
+      });
+      UserCredential user = await FirebaseAuth.instance
+          .createUserWithEmailAndPassword(
+        email: emailTextController.text,
+        password: passwordTextController.text,
+      );
+      setState(() {
+        isProcessing = false;
+      });
+      if (user.user != null) {
+        Navigator.pushReplacementNamed(
+          context,
+          ChatView.routeName,
+          arguments: user.user,
+        );
+      } else {
+        setState(() {
+          isProcessing = false;
+        });
+      }
+    }
   }
 }
