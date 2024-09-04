@@ -1,15 +1,20 @@
 import 'package:chat_app/constants.dart';
 import 'package:chat_app/views/login_view.dart';
 import 'package:chat_app/views/widgets/chat_bubble.dart';
+import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 
 class ChatView extends StatelessWidget {
   ChatView({super.key});
+  static const String routeName = "chat";
 
   TextEditingController controller = TextEditingController();
 
-  static const String routeName = "chat";
+  //FirebaseFirestore firestore = FirebaseFirestore.instance;
+  CollectionReference messages =
+      FirebaseFirestore.instance.collection(kMessagesCollection);
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -18,14 +23,16 @@ class ChatView extends StatelessWidget {
         backgroundColor: kPrimaryColor,
         title: const Text('Flash chat'),
         centerTitle: true,
-        leading:
-          IconButton(
-            onPressed: () async{
-              await FirebaseAuth.instance.signOut();
-              Navigator.pushReplacementNamed(context, LoginView.routeName);
-            },
-            icon: Icon(Icons.logout),
-          ),
+        leading: IconButton(
+          onPressed: () async {
+            await FirebaseAuth.instance.signOut();
+            Navigator.pushReplacementNamed(
+              context,
+              LoginView.routeName,
+            );
+          },
+          icon: Icon(Icons.logout),
+        ),
       ),
       body: Column(
         children: [
@@ -40,6 +47,12 @@ class ChatView extends StatelessWidget {
           Padding(
             padding: const EdgeInsets.all(16.0),
             child: TextField(
+              onSubmitted: (data) {
+                messages.add({
+                  'message': data,
+                });
+                controller.clear();
+              },
               controller: controller,
               decoration: InputDecoration(
                 hintText: 'Send Message',
