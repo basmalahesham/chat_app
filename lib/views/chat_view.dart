@@ -1,5 +1,7 @@
 import 'package:chat_app/constants.dart';
+import 'package:chat_app/views/login_view.dart';
 import 'package:chat_app/views/widgets/chat_bubble.dart';
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 
 class ChatView extends StatelessWidget {
@@ -16,6 +18,14 @@ class ChatView extends StatelessWidget {
         backgroundColor: kPrimaryColor,
         title: const Text('Flash chat'),
         centerTitle: true,
+        leading:
+          IconButton(
+            onPressed: () async{
+              await FirebaseAuth.instance.signOut();
+              Navigator.pushReplacementNamed(context, LoginView.routeName);
+            },
+            icon: Icon(Icons.logout),
+          ),
       ),
       body: Column(
         children: [
