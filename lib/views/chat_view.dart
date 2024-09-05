@@ -31,7 +31,7 @@ class _ChatViewState extends State<ChatView> {
       appBar: AppBar(
         automaticallyImplyLeading: false,
         backgroundColor: kPrimaryColor,
-        title: const Text('Scholar chat'),
+        title: const Text('Flash chat'),
         centerTitle: true,
         leading: IconButton(
           onPressed: () async {
