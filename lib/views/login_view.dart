@@ -26,13 +26,13 @@ class _LoginViewState extends State<LoginView> {
   Future<FirebaseApp> initializeFireBase() async {
     FirebaseApp firebaseApp = await Firebase.initializeApp();
     User? user = FirebaseAuth.instance.currentUser;
-    if (user != null) {
-      Navigator.pushReplacementNamed(
-        context,
-        ChatView.routeName,
-        arguments: user,
-      );
-    }
+    // if (user != null) {
+    //   Navigator.pushReplacementNamed(
+    //     context,
+    //     ChatView.routeName,
+    //     arguments: user,
+    //   );
+    // }
     return firebaseApp;
   }
 
@@ -182,8 +182,8 @@ class _LoginViewState extends State<LoginView> {
       UserCredential user = await FirebaseAuth
           .instance
           .signInWithEmailAndPassword(
-        email: emailTextController.text,
-        password: passwordTextController.text,
+        email: email!,
+        password: password!,
       );
       setState(() {
         isProcessing = false;
@@ -192,7 +192,7 @@ class _LoginViewState extends State<LoginView> {
         Navigator.pushReplacementNamed(
           context,
           ChatView.routeName,
-          arguments: user.user,
+          arguments: email,
         );
       }
     }

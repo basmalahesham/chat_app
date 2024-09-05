@@ -160,8 +160,8 @@ class _RegisterViewState extends State<RegisterView> {
       });
       UserCredential user = await FirebaseAuth.instance
           .createUserWithEmailAndPassword(
-        email: emailTextController.text,
-        password: passwordTextController.text,
+        email: email!,
+        password: password!,
       );
       setState(() {
         isProcessing = false;
@@ -170,7 +170,7 @@ class _RegisterViewState extends State<RegisterView> {
         Navigator.pushReplacementNamed(
           context,
           ChatView.routeName,
-          arguments: user.user,
+          arguments: email,
         );
       } else {
         setState(() {

@@ -34,10 +34,9 @@ class MyApp extends StatelessWidget {
       ),
       initialRoute: LoginView.routeName,
       routes: {
-        LoginView.routeName: (context)=>const LoginView(),
-        RegisterView.routeName : (context)=>const RegisterView(),
-        ChatView.routeName : (context)=> ChatView(),
-
+        LoginView.routeName: (context) => const LoginView(),
+        RegisterView.routeName: (context) => const RegisterView(),
+        ChatView.routeName: (context) => ChatView(),
       },
     );
   }
